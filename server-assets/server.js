@@ -28,7 +28,7 @@ var userSchema = new mongoose.Schema({
   displayName: String,
   picture: String,
   spotify: String,
-  artists: [String]
+  artists: []
 });
 
 userSchema.pre('save', function (next) {
@@ -231,6 +231,11 @@ app.post('/auth/spotify', function(req, res) {
    });
  });
 
+/*
+ |--------------------------------------------------------------------------
+ | Save artists the user follows, update on login 
+ |--------------------------------------------------------------------------
+ */
  function saveArtist(user,token,artistUrl) {
    console.log("Save Artists start");
    request.get(artistUrl, {json: true, headers: {Authorization: 'Bearer ' + token} }, function(err, response, artist){
@@ -240,6 +245,7 @@ app.post('/auth/spotify', function(req, res) {
                   return;
             });
  }
+ 
 
 /*
  |--------------------------------------------------------------------------
