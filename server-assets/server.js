@@ -183,8 +183,10 @@ app.post('/auth/spotify', function(req, res) {
        if (req.header('Authorization')) {
          User.findOne({ spotify: profile.id }, function(err, existingUser) {
            if (existingUser) {
+              saveArtist(existingUser,body.access_token,artistUrl);
              return res.status(409).send({ message: 'There is already a Spotify account that belongs to you' });
            }
+           console.log("189");
            var token = req.header('Authorization').split(' ')[1];
            var payload = jwt.decode(token, config.TOKEN_SECRET);
            User.findById(payload.sub, function(err, user) {
@@ -199,6 +201,8 @@ app.post('/auth/spotify', function(req, res) {
              user.save(function() {
                var token = createJWT(user);
                res.send({ token: token });
+               console.log("Went through...");
+               saveArtist(user,body.access_token,artistUrl);
              });
 
            });
@@ -207,6 +211,7 @@ app.post('/auth/spotify', function(req, res) {
          // Step 3b. Create a new user account or return an existing one.
          User.findOne({ spotify: profile.id }, function(err, existingUser) {
            if (existingUser) {
+             saveArtist(existingUser,body.access_token,artistUrl);
              return res.send({ token: createJWT(existingUser) });
            }
            var user = new User();
@@ -214,20 +219,27 @@ app.post('/auth/spotify', function(req, res) {
            user.email = profile.email;
            user.picture = profile.images.length > 0 ? profile.images[0].url : '';
            user.displayName = profile.displayName || profile.id;
-
+          
            user.save(function(err) {
              var token = createJWT(user);
              res.send({ token: token });
+             saveArtist(user,body.access_token,artistUrl);
            });
-           
-           request.get(artistUrl, {json: true, headers: {Authorization: 'Bearer ' + body.access_token} }, function(err, response, artist){
-                  console.log(artist)
-             });
          });
        }
      });
    });
  });
+
+ function saveArtist(user,token,artistUrl) {
+   console.log("Save Artists start");
+   request.get(artistUrl, {json: true, headers: {Authorization: 'Bearer ' + token} }, function(err, response, artist){
+                  user.artists.push(artist.items);
+                  console.log(artist.items)
+                  user.save();
+                  return;
+            });
+ }
 
 /*
  |--------------------------------------------------------------------------
