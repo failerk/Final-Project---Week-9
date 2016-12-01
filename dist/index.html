@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="MyApp">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Release Notify</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link href="//fonts.googleapis.com/css?family=Roboto|Montserrat:400,700|Open+Sans:400,300,600" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="//code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//cdn.jsdelivr.net/animatecss/3.2.0/animate.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div ng-controller="NavbarCtrl" class="navbar navbar-default navbar-static-top">
+  <div class="navbar-header">
+    <a class="navbar-brand" href="/"><i class="ion-ios7-pulse-strong"></i> Satellizer</a>
+  </div>
+  <ul class="nav navbar-nav">
+    <li><a href="/#/">Home</a></li>
+    <li ng-if="isAuthenticated()"><a href="/#/profile">Profile</a></li>
+  </ul>
+  <ul ng-if="!isAuthenticated()" class="nav navbar-nav pull-right">
+    <li><a href="/#/login">Login</a></li>
+    <li><a href="/#/signup">Sign up</a></li>
+  </ul>
+  <ul ng-if="isAuthenticated()" class="nav navbar-nav pull-right">
+    <li><a href="/#/logout">Logout</a></li>
+  </ul>
+</div>
+
+<div ui-view></div>
+
+    <!--JS jquery and bootstrap-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <!--angular-->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular-sanitize/1.5.8/angular-sanitize.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.3.1/angular-ui-router.min.js"></script>
+
+
+    <!-- Third-party Libraries -->
+    <script src="js/vendor/angular-animate.js"></script>
+    <script src="js/vendor/angular-messages.js"></script>
+    <script src="js/vendor/angular-resource.js"></script>
+    <script src="js/vendor/angular-toastr.tpls.js"></script>
+    <script src="js/vendor/satellizer.js"></script>
+
+    <!--scripts-->
+    <script src="js/app.js"></script>
+    <script src="js/directives/passwordMatch.js"></script>
+    <script src="js/directives/passwordStrength.js"></script>
+    <script src="js/services/account.js"></script>
+    <script src="js/controllers/home.js"></script>
+    <script src="js/controllers/login.js"></script>
+    <script src="js/controllers/logout.js"></script>
+    <script src="js/controllers/navbar.js"></script>
+    <script src="js/controllers/profile.js"></script>
+    <script src="js/controllers/signup.js"></script>
+    
+
+</body>
+
+</html>

@@ -1,0 +1,51 @@
+{
+  "name": "drinkup",
+  "version": "1.0.0",
+  "description": "Kyle and Wolf's beer app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mwolfhoffman/Drink-Up.git"
+  },
+  "author": "Wolf Hoffman, Kyle Pfahler",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mwolfhoffman/Drink-Up/issues"
+  },
+  "homepage": "https://github.com/mwolfhoffman/Drink-Up#readme",
+  "devDependencies": {
+    "babel-preset-es2015": "^6.16.0",
+    "browser-sync": "^2.17.0",
+    "child_process": "^1.0.2",
+    "del": "^2.2.2",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^3.1.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-cache": "^0.4.5",
+    "gulp-concat": "^2.6.0",
+    "gulp-cssimport": "^4.0.1",
+    "gulp-gh-pages": "^0.5.4",
+    "gulp-imagemin": "^3.0.3",
+    "gulp-minify-css": "^1.2.4",
+    "gulp-notify": "^2.2.0",
+    "gulp-plumber": "^1.1.0",
+    "gulp-postcss": "^6.2.0",
+    "gulp-sass": "^2.3.2",
+    "gulp-sourcemaps": "^2.1.1",
+    "gulp-util": "^3.0.7",
+    "run-sequence": "^1.2.2",
+    "streamqueue": "^1.1.1"
+  },
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "connect-redis": "^3.1.0",
+    "cors": "^2.8.1",
+    "express": "^4.14.0",
+    "express-session": "^1.14.2",
+    "nedb": "^1.8.0",
+    "passport": "^0.3.2"
+  }
+}
