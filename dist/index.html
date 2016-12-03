@@ -15,24 +15,9 @@
 
 <body>
 
-<div ng-controller="NavbarCtrl" class="navbar navbar-default navbar-static-top">
-  <div class="navbar-header">
-    <a class="navbar-brand" href="/"><i class="ion-ios7-pulse-strong"></i> Satellizer</a>
-  </div>
-  <ul class="nav navbar-nav">
-    <li><a href="/#/">Home</a></li>
-    <li ng-if="isAuthenticated()"><a href="/#/profile">Profile</a></li>
-  </ul>
-  <ul ng-if="!isAuthenticated()" class="nav navbar-nav pull-right">
-    <li><a href="/#/login">Login</a></li>
-    <li><a href="/#/signup">Sign up</a></li>
-  </ul>
-  <ul ng-if="isAuthenticated()" class="nav navbar-nav pull-right">
-    <li><a href="/#/logout">Logout</a></li>
-  </ul>
-</div>
+<div class="container" ui-view name="aside"></div>
 
-<div ui-view></div>
+<div class="container" ui-view name="content"></div>
 
     <!--JS jquery and bootstrap-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -56,12 +41,15 @@
     <script src="js/directives/passwordMatch.js"></script>
     <script src="js/directives/passwordStrength.js"></script>
     <script src="js/services/account.js"></script>
+    <script src="js/services/new.js"></script>
     <script src="js/controllers/home.js"></script>
     <script src="js/controllers/login.js"></script>
     <script src="js/controllers/logout.js"></script>
     <script src="js/controllers/navbar.js"></script>
     <script src="js/controllers/profile.js"></script>
-    <script src="js/controllers/signup.js"></script>
+    <script src="js/controllers/sidebar.js"></script>
+    <script src="js/controllers/release.js"></script>
+
     
 
 </body>

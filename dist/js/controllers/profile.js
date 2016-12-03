@@ -4,6 +4,7 @@ angular.module('MyApp').controller('ProfileCtrl', function ($scope, $auth, toast
   $scope.getProfile = function () {
     Account.getProfile().then(function (response) {
       $scope.user = response.data;
+      console.log(response.data);
     }).catch(function (response) {
       toastr.error(response.data.message, response.status);
     });

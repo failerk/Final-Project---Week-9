@@ -28,7 +28,8 @@ var userSchema = new mongoose.Schema({
   displayName: String,
   picture: String,
   spotify: String,
-  artists: []
+  artists: [],
+  spotifyToken: String,
 });
 
 userSchema.pre('save', function (next) {
@@ -184,6 +185,7 @@ app.post('/auth/spotify', function(req, res) {
          User.findOne({ spotify: profile.id }, function(err, existingUser) {
            if (existingUser) {
               saveArtist(existingUser,body.access_token,artistUrl);
+              newReleases(existingUser,body.access_token)
              return res.status(409).send({ message: 'There is already a Spotify account that belongs to you' });
            }
            console.log("189");
@@ -195,6 +197,7 @@ app.post('/auth/spotify', function(req, res) {
              }
              user.spotify = profile.id;
              user.email = user.email || profile.email;
+             user.spotifyToken = body.access_token;
              user.picture = profile.images.length > 0 ? profile.images[0].url : '';
              user.displayName = user.displayName || profile.displayName || profile.id;
 
@@ -203,6 +206,7 @@ app.post('/auth/spotify', function(req, res) {
                res.send({ token: token });
                console.log("Went through...");
                saveArtist(user,body.access_token,artistUrl);
+               newReleases(existingUser,body.access_token)
              });
 
            });
@@ -217,6 +221,7 @@ app.post('/auth/spotify', function(req, res) {
            var user = new User();
            user.spotify = profile.id;
            user.email = profile.email;
+           user.spotifyToken = body.access_token;
            user.picture = profile.images.length > 0 ? profile.images[0].url : '';
            user.displayName = profile.displayName || profile.id;
           
@@ -246,7 +251,6 @@ app.post('/auth/spotify', function(req, res) {
             });
  }
  
-
 /*
  |--------------------------------------------------------------------------
  | Unlink Provider

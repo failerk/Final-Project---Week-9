@@ -28,21 +28,19 @@ angular.module('MyApp', ['ngResource', 'ngMessages', 'ngAnimate', 'toastr', 'ui.
   /**
    * App routes
    */
-  $stateProvider.state('home', {
-    url: '/',
-    controller: 'HomeCtrl',
-    templateUrl: 'partials/home.html'
-  }).state('login', {
+  $stateProvider.state('login', {
     url: '/login',
     templateUrl: 'partials/login.html',
-    controller: 'LoginCtrl',
-    resolve: {
-      skipIfLoggedIn: skipIfLoggedIn
-    }
-  }).state('signup', {
-    url: '/signup',
-    templateUrl: 'partials/signup.html',
-    controller: 'SignupCtrl',
+    views: {
+      aside: {
+        templateUrl: 'partials/navbar.html',
+        controller: 'LoginCtrl'
+      },
+      content: {
+        templateUrl: 'partials/login.html',
+        controller: 'LoginCtrl'
+      }
+    },
     resolve: {
       skipIfLoggedIn: skipIfLoggedIn
     }
@@ -57,13 +55,39 @@ angular.module('MyApp', ['ngResource', 'ngMessages', 'ngAnimate', 'toastr', 'ui.
     resolve: {
       loginRequired: loginRequired
     }
+  }).state('newreleases', {
+    url: '/newreleases',
+    views: {
+      aside: {
+        templateUrl: 'partials/sidebar.html',
+        controller: 'SidebarCtrl'
+      },
+      content: {
+        templateUrl: 'partials/newreleases.html',
+        controller: 'ReleaseCtrl'
+      }
+    },
+    resolve: {
+      loginRequired: loginRequired
+    }
+  }).state('home', {
+    url: '/',
+    views: {
+      aside: {
+        templateUrl: 'partials/navbar.html',
+        controller: 'NavbarCtrl'
+      },
+      content: {
+        templateUrl: 'partials/home.html',
+        controller: 'HomeCtrl'
+      }
+    }
   });
   $urlRouterProvider.otherwise('/');
 
   /**
    *  Satellizer config
    */
-
   $authProvider.spotify({
     clientId: '7186f05dbb42497884aba2c91c287165',
     url: 'http://localhost:3000/auth/spotify',
