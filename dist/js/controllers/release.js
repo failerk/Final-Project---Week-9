@@ -8,7 +8,12 @@ angular.module('MyApp').controller('ReleaseCtrl', function ($scope, AllReleases,
 
   var getAll = AllReleases.getReleases();
   getAll.then(function (response, err) {
-    console.log(err);
+    console.log(response.data);
     vm.allNewReleases = response.data;
+  });
+
+  var getAllReleases = AllReleases.getAllReleases();
+  getAllReleases.then(function (response, err) {
+    console.log(response.data);
   });
 });

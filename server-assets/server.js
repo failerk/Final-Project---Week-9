@@ -109,19 +109,6 @@ function ensureAuthenticated(req, res, next) {
   next();
 }
 
-/*
- |--------------------------------------------------------------------------
- | Generate JSON Web Token
- |--------------------------------------------------------------------------
- */
-function createJWT(user) {
-  var payload = {
-    sub: user._id,
-    iat: moment().unix(),
-    exp: moment().add(14, 'days').unix()
-  };
-  return jwt.encode(payload, config.TOKEN_SECRET);
-}
 
 /*
  |--------------------------------------------------------------------------
@@ -203,7 +190,7 @@ app.post('/auth/spotify', function(req, res) {
 
              user.save(function() {
                var token = createJWT(user);
-               res.send({ token: token });
+               res.send({ token: body.access_token });
                console.log("Went through...");
                saveArtist(user,body.access_token,artistUrl);
                newReleases(existingUser,body.access_token)
@@ -216,7 +203,7 @@ app.post('/auth/spotify', function(req, res) {
          User.findOne({ spotify: profile.id }, function(err, existingUser) {
            if (existingUser) {
              saveArtist(existingUser,body.access_token,artistUrl);
-             return res.send({ token: createJWT(existingUser) });
+             return res.send({ token: body.access_token });
            }
            var user = new User();
            user.spotify = profile.id;
@@ -226,8 +213,7 @@ app.post('/auth/spotify', function(req, res) {
            user.displayName = profile.displayName || profile.id;
           
            user.save(function(err) {
-             var token = createJWT(user);
-             res.send({ token: token });
+             res.send({ token: body.access_token });
              saveArtist(user,body.access_token,artistUrl);
            });
          });

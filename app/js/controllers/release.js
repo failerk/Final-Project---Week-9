@@ -7,7 +7,12 @@ angular.module('MyApp')
 
     let getAll = AllReleases.getReleases()
     getAll.then(function(response,err,){
-      console.log(err);
+      console.log(response.data);
       vm.allNewReleases = response.data
+    })
+
+    let getAllReleases = AllReleases.getAllReleases()
+    getAllReleases.then(function(response,err,){
+      console.log(response.data);
     })
   });
