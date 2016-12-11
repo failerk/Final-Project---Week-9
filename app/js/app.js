@@ -1,6 +1,6 @@
 angular.module('MyApp', ['ngResource', 'ngMessages', 'ngAnimate', 'toastr', 'ui.router', 'satellizer'])
   .config(function ($stateProvider, $urlRouterProvider, $authProvider) {
-
+  
     /**
      * Helper auth functions
      */
@@ -95,6 +95,10 @@ angular.module('MyApp', ['ngResource', 'ngMessages', 'ngAnimate', 'toastr', 'ui.
     $authProvider.spotify({
       clientId: '7186f05dbb42497884aba2c91c287165',
       url: 'http://localhost:3000/auth/spotify',
-      scope: ['user-top-read'],
+      requiredUrlParams: ['scope'],
+      scope: ['user-top-read user-follow-read playlist-read-private'],
     });
+    
+    
   });
+  

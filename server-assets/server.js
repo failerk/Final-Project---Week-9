@@ -115,10 +115,11 @@ function ensureAuthenticated(req, res, next) {
  | GET /api/me
  |--------------------------------------------------------------------------
  */
-app.get('/api/me', ensureAuthenticated, function (req, res) {
-  User.findById(req.user, function (err, user) {
-    res.send(user);
-  });
+app.post('/api/me', function (req, res) {
+  console.log(req.body);
+  User.findOne({'spotifyToken':req.body.id},function(req,user){
+    res.json(user);
+  })
 });
 
 /*
@@ -146,97 +147,126 @@ app.put('/api/me', ensureAuthenticated, function (req, res) {
  | Login with Spotify
  |--------------------------------------------------------------------------
  */
-app.post('/auth/spotify', function(req, res) {
-   var tokenUrl = 'https://accounts.spotify.com/api/token';
-   var userUrl = 'https://api.spotify.com/v1/me';
-   var artistUrl = 'https://api.spotify.com/v1/me/top/artists'
+app.post('/auth/spotify', function (req, res) {
+  var tokenUrl = 'https://accounts.spotify.com/api/token';
+  var userUrl = 'https://api.spotify.com/v1/me';
+  var artistUrl = 'https://api.spotify.com/v1/me/top/artists'
 
-   var params = {
-     grant_type: 'authorization_code',
-     code: req.body.code,
-     redirect_uri: req.body.redirectUri
-   };
+  var params = {
+    grant_type: 'authorization_code',
+    code: req.body.code,
+    redirect_uri: req.body.redirectUri
+  };
 
-   var headers = {
-     Authorization: 'Basic ' + new Buffer(req.body.clientId + ':' + config.SPOTIFY_SECRET).toString('base64')
-   };
+  var headers = {
+    Authorization: 'Basic ' + new Buffer(req.body.clientId + ':' + config.SPOTIFY_SECRET).toString('base64')
+  };
 
-   request.post(tokenUrl, { json: true, form: params, headers: headers }, function(err, response, body) {
-     if (body.error) {
-       return res.status(400).send({ message: body.error_description });
-     }
+  request.post(tokenUrl, {
+    json: true,
+    form: params,
+    headers: headers
+  }, function (err, response, body) {
+    if (body.error) {
+      return res.status(400).send({
+        message: body.error_description
+      });
+    }
 
-     request.get(userUrl, {json: true, headers: {Authorization: 'Bearer ' + body.access_token} }, function(err, response, profile){
-       // Step 3a. Link user accounts.
-       if (req.header('Authorization')) {
-         User.findOne({ spotify: profile.id }, function(err, existingUser) {
-           if (existingUser) {
-              saveArtist(existingUser,body.access_token,artistUrl);
-              newReleases(existingUser,body.access_token)
-             return res.status(409).send({ message: 'There is already a Spotify account that belongs to you' });
-           }
-           console.log("189");
-           var token = req.header('Authorization').split(' ')[1];
-           var payload = jwt.decode(token, config.TOKEN_SECRET);
-           User.findById(payload.sub, function(err, user) {
-             if (!user) {
-               return res.status(400).send({ message: 'User not found' });
-             }
-             user.spotify = profile.id;
-             user.email = user.email || profile.email;
-             user.spotifyToken = body.access_token;
-             user.picture = profile.images.length > 0 ? profile.images[0].url : '';
-             user.displayName = user.displayName || profile.displayName || profile.id;
+    request.get(userUrl, {
+      json: true,
+      headers: {
+        Authorization: 'Bearer ' + body.access_token
+      }
+    }, function (err, response, profile) {
+      // Step 3a. Link user accounts.
+      if (req.header('Authorization')) {
+        User.findOne({
+          spotify: profile.id
+        }, function (err, existingUser) {
+          if (existingUser) {
+            saveArtist(existingUser, body.access_token, artistUrl);
+            newReleases(existingUser, body.access_token)
+            return res.status(409).send({
+              message: 'There is already a Spotify account that belongs to you'
+            });
+          }
+          console.log("189");
+          var token = req.header('Authorization').split(' ')[1];
+          var payload = jwt.decode(token, config.TOKEN_SECRET);
+          User.findById(payload.sub, function (err, user) {
+            if (!user) {
+              return res.status(400).send({
+                message: 'User not found'
+              });
+            }
+            user.spotify = profile.id;
+            user.email = user.email || profile.email;
+            user.spotifyToken = body.access_token;
+            user.picture = profile.images.length > 0 ? profile.images[0].url : '';
+            user.displayName = user.displayName || profile.displayName || profile.id;
 
-             user.save(function() {
-               var token = createJWT(user);
-               res.send({ token: body.access_token });
-               console.log("Went through...");
-               saveArtist(user,body.access_token,artistUrl);
-               newReleases(existingUser,body.access_token)
-             });
+            user.save(function () {
+              var token = createJWT(user);
+              res.send({
+                token: body.access_token
+              });
+              console.log("Went through...");
+              saveArtist(user, body.access_token, artistUrl);
+              newReleases(existingUser, body.access_token)
+            });
 
-           });
-         });
-       } else {
-         // Step 3b. Create a new user account or return an existing one.
-         User.findOne({ spotify: profile.id }, function(err, existingUser) {
-           if (existingUser) {
-             saveArtist(existingUser,body.access_token,artistUrl);
-             return res.send({ token: body.access_token });
-           }
-           var user = new User();
-           user.spotify = profile.id;
-           user.email = profile.email;
-           user.spotifyToken = body.access_token;
-           user.picture = profile.images.length > 0 ? profile.images[0].url : '';
-           user.displayName = profile.displayName || profile.id;
-          
-           user.save(function(err) {
-             res.send({ token: body.access_token });
-             saveArtist(user,body.access_token,artistUrl);
-           });
-         });
-       }
-     });
-   });
- });
+          });
+        });
+      } else {
+        // Step 3b. Create a new user account or return an existing one.
+        User.findOne({
+          spotify: profile.id
+        }, function (err, existingUser) {
+          if (existingUser) {
+            saveArtist(existingUser, body.access_token, artistUrl);
+            return res.send({
+              token: body.access_token
+            });
+          }
+          var user = new User();
+          user.spotify = profile.id;
+          user.email = profile.email;
+          user.spotifyToken = body.access_token;
+          user.picture = profile.images.length > 0 ? profile.images[0].url : '';
+          user.displayName = profile.displayName || profile.id;
+
+          user.save(function (err) {
+            res.send({
+              token: body.access_token
+            });
+            saveArtist(user, body.access_token, artistUrl);
+          });
+        });
+      }
+    });
+  });
+});
 
 /*
  |--------------------------------------------------------------------------
  | Save artists the user follows, update on login 
  |--------------------------------------------------------------------------
  */
- function saveArtist(user,token,artistUrl) {
-   console.log("Save Artists start");
-   request.get(artistUrl, {json: true, headers: {Authorization: 'Bearer ' + token} }, function(err, response, artist){
-                  user.artists.push(artist.items);
-                  console.log(artist.items)
-                  user.save();
-                  return;
-            });
- }
- 
+function saveArtist(user, token, artistUrl) {
+  console.log("Save Artists start");
+  request.get(artistUrl, {
+    json: true,
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }, function (err, response, artist) {
+    user.artists.push(artist.items);
+    user.save();
+    return;
+  });
+}
+
 /*
  |--------------------------------------------------------------------------
  | Unlink Provider

@@ -1,0 +1,16 @@
+//--------------------------------
+//Global Colors
+//--------------------------------
+$sidebar-color: #181818;
+$main-color: #282828;
+$spot-green: #7ED321;
+$off-white: #9B9B9B;
+main {
+    .container {
+        width: 70%;
+        height: 100%;
+        float: right;
+        display: inline-block;
+        background-color: $main-color;
+    }
+}

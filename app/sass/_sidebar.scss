@@ -1,0 +1,43 @@
+//--------------------------------
+//Global Colors
+//--------------------------------
+$sidebar-color: #181818;
+$main-color: #282828;
+$spot-green: #7ED321;
+$off-white: #9B9B9B;
+aside {
+    .container {
+        width: 30%;
+        height: 100%;
+        float: left;
+        display: inline-block;
+        background-color: $sidebar-color;
+        p {
+            color: white;
+            font-weight: 100;
+            font-size: 36px;
+            padding: 20px 0 20px 0;
+            text-align: center;
+        }
+        img {
+            border-radius: 50%;
+            display: block;
+            margin: 0 auto;
+            margin-bottom: 40px;
+        }
+        nav {
+            height: 100%;
+            a {
+                color: white;
+                display: block;
+                font-weight: 100;
+                font-size: 36px;
+                padding-bottom: 10px;
+                &:hover {
+                    font-weight: 300;
+                    text-decoration: none;
+                }
+            }
+        }
+    }
+}

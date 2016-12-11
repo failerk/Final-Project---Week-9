@@ -1,4 +1,12 @@
-<div>
-
-<h3>Beep beep im a sidebar</h3>
-    </div>
+<div class="container" ng-model="getAccount" ng-class="{true: 'active', false: 'inactive'}[isActive]">
+    <button ng-click="toggleActive()" ><i class="fa fa-bars" aria-hidden="true"></i></button>
+    <p>{{user.displayName}}</p>
+    <img src="{{user.picture}}">
+    <nav>
+        <a href="#">New Releases</a>
+        <a href="#">My Artists</a>
+        <a href="#">Concerts</a>
+        <a href="#">Settings</a>
+        <a href="#">Logout</a>
+    </nav>
+</div>
